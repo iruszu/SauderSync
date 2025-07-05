@@ -1,0 +1,21 @@
+{
+    "short_name": "Boilerplate Template",
+    "long_name": "Alexander's Boilerplate Template",
+    "subtitle": "",
+    "description": "A boilerplate for my app set-up",
+  
+    "support_email": "alexkim.347@gmail.com",
+    "site_title": "Boilerplate",
+    "favicon_url": "./demo/favicon.ico",
+    "logo_url": "",
+    "logo_mono_url": "",
+    "icon_192_url": "/demo/icon_192.png",
+    "icon_512_url": "/demo/icon_51.png",
+  
+    "theme_colors": {
+      "primaryColor": {
+        "light": "#3889C7",
+        "dark": "#4738c7"
+      }
+    }
+}

@@ -1,0 +1,3 @@
+# pack-refs with: peeled fully-peeled sorted 
+9fce488e3a8ba156ed2638d484adcc7738a63c23 refs/heads/master
+0eb0bde7897d5f6d7a96ced725a30bf6c6572690 refs/heads/offline-mode-redux
