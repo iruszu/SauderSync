@@ -22,9 +22,10 @@ export const generateManifestFields = (config: RuntimeEnvironmentConfig) => {
   const icons: imageMtd[] = [];
   const screenshots: imageMtd[] = [];
 
-  addImageEntryFromFieldName(icons, 'favicon_48x48', config.favicon_url);
-  addImageEntryFromFieldName(icons, 'icon_192x192', config.icon_192_url);
-  addImageEntryFromFieldName(icons, 'icon_512x512', config.icon_512_url);
+  addImageEntryFromFieldName(icons, '48x48', config.favicon_url);
+  addImageEntryFromFieldName(icons, '192x192', config.icon_192_url);
+  addImageEntryFromFieldName(icons, '512x512', config.icon_512_url);
+  addImageEntryFromFieldName(screenshots, '1800x1011', config.logo_url);
 
   // Add screenshots dynamically using regex on field names
   const screenshotFields = Object.entries(config.screenshots || {});
@@ -65,7 +66,7 @@ export const generateManifestFields = (config: RuntimeEnvironmentConfig) => {
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const brand = env.VITE_CONFIG_KEY || 'default';
+  const brand = env.VITE_CONFIG_KEY || 'sauderhub';
   console.log('brand config:', brand);
 
   const configPath = path.resolve(
@@ -83,6 +84,7 @@ export default defineConfig(({ mode }) => {
         workbox: {
           globPatterns: ['**/*'],
         },
+        registerType: 'autoUpdate',
         includeAssets: ['**/*'],
         manifest: {
           display: 'standalone',
