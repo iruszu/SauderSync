@@ -9,7 +9,6 @@ import { useServiceWorker } from '@store/useServiceWorker';
 
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import '@xyflow/react/dist/style.css';
 import './extra-fonts.css';
 import './global.css';
 

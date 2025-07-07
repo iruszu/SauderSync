@@ -1,21 +1,42 @@
 {
-    "short_name": "Boilerplate Template",
-    "long_name": "Alexander's Boilerplate Template",
-    "subtitle": "",
-    "description": "A boilerplate for my app set-up",
-  
-    "support_email": "alexkim.347@gmail.com",
-    "site_title": "Boilerplate",
-    "favicon_url": "./demo/favicon.ico",
-    "logo_url": "",
-    "logo_mono_url": "",
-    "icon_192_url": "/demo/icon_192.png",
-    "icon_512_url": "/demo/icon_51.png",
-  
-    "theme_colors": {
-      "primaryColor": {
-        "light": "#3889C7",
-        "dark": "#4738c7"
-      }
+  "subtitle": "sauderhub",
+  "description": "this is a separate configuration to demonstrate the white-labeled set-up of the boilerplate",
+  "support_email": "kellieh.exe@gmail.com",
+  "site_title": "sauderhub",
+  "short_name": "SauderHub",
+  "start_url": "/",
+  "long_name": "SauderHub",
+  "orientation": "portrait",
+  "display": "standalone",
+  "favicon_url": "https://ires.ubc.ca/files/2019/10/ubc-logo.png",
+  "logo_url": "",
+  "logo_mono_url": "",
+  "icon_192_url": "/demo/icon_192.png",
+  "icon_512_url": "/demo/icon_512.png",
+  "screenshots": [
+    {
+      "src": "/demo/screenshot.png",
+      "sizes": "1800x1011",
+      "type": "image/jpg"
+    },
+    {
+      "src": "/demo/screenshot.png",
+      "sizes": "1800x1011",
+      "type": "image/jpg"
     }
+  ],
+  "theme_color": "#3889C7",
+  "background_color": "#c8aac9",
+  "theme_colors": {
+    "primaryColor": "#3889C7"
+  },
+  "replaceGlobalBackground": {
+    "light": "#c8aac9",
+    "dark": "#4126f7"
+  },
+  "defaultBorderRadius": "5",
+  "fontFamily": "Inter",
+  "headings": {
+    "fontFamily": "Philosopher"
+  }
 }
