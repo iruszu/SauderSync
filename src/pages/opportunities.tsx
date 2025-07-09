@@ -55,7 +55,7 @@ const opportunities = [
 ];
 
 
-export const Home = (): ReactElement => { 
+export const Opportunities = (): ReactElement => { 
     return (
         <Flex>
             <Box w={300} p="md" bg="gray.0" h="100dvh">
@@ -85,4 +85,4 @@ export const Home = (): ReactElement => {
       );
 };
 
-export default Home;
+export default Opportunities;

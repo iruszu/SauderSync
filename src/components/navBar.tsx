@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IconGauge, IconDoor, IconActivity, IconZoomIn, IconHelp } from '@tabler/icons-react'
-import { Box, NavLink } from '@mantine/core';
-import { Link } from 'react-router-dom';
+import { Box } from '@mantine/core';
+import TypedNavLink from './typedNavLink'
 
 const data = [
   { icon: IconGauge, label: 'Dashboard', description: 'Home Page', to: '/'
@@ -21,9 +21,8 @@ function NavigationBar() {
   const [active, setActive] = useState(0);
 
   const items = data.map((item, index) => (
-    <NavLink
+    <TypedNavLink
       key={item.label}
-      component={item.to ? Link : 'div'}
       to={item.to}
       active={index === active}
       label={item.label}
