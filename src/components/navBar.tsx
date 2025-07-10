@@ -16,14 +16,19 @@ const NavigationBar = () => {
           to="/opportunities"
         />
         <NavLink
-          label="Debugger"
+          label="News"
           component={Link}
-          to="/debugger"
+          to="/news"
         />
         <NavLink
-          label="Branding"
+          label="Room Bookings"
           component={Link}
-          to="/branding"
+          to="/roombookings"
+        />
+        <NavLink
+          label="Authentication"
+          component={Link}
+          to="/authentication"
         />
       </>
     );

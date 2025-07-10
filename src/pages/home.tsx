@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 import MyComponent from '@components/oppComponent';
-import { Grid } from '@mantine/core';
+import { Grid, Flex, Title, Box } from '@mantine/core';
+import NavigationBar from '@components/navBar';
 
 const opportunities = [
     {
@@ -56,21 +57,30 @@ const opportunities = [
 
 export const Home = (): ReactElement => { 
     return (
-        <Grid 
-        gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}
-        justify="center" 
-        align="center"
-        style={{ marginTop: '20px', marginLeft: '20px', marginRight: '20px' }}
+        <Flex>
+            <Box w={300} p="md" bg="gray.0" h="100dvh">
+                <NavigationBar />
+            </Box>
+            <Box p="md" style={{ flex: 1 }}>
+                <Title order={2} mb="md">Home</Title>
+                <Grid 
+                    gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}
+                    justify="center" 
+                    align="center"
+                    style={{ marginTop: '20px', marginLeft: '20px', marginRight: '20px' }}
 
-        >
-          {opportunities.map((opportunity, index) => (
-            <Grid.Col 
-              key={index} 
-              span={{ base: 12, md: 6, lg: 4 }}>
-                <MyComponent {...opportunity} />
-            </Grid.Col>
-          ))}
-          </Grid>  
+                    >
+                    {opportunities.map((opportunity, index) => (
+                        <Grid.Col 
+                        key={index} 
+                        span={{ base: 12, md: 6, lg: 4 }}>
+                            <MyComponent {...opportunity} />
+                        </Grid.Col>
+                    ))}
+                </Grid>  
+
+            </Box>
+        </Flex>
       );
 };
 
