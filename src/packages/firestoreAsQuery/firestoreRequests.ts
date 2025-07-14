@@ -18,6 +18,7 @@ export const createFirestoreDocument = async <T>(
   data: T,
   merge: boolean = false, // merge with existing document data
 ): Promise<void> => {
+  console.log('Creating Firestore document at:', path, 'with data:', data);
   try {
     if (!path || !data)
       throw new Error('Invalid path or data for Firestore document creation.');

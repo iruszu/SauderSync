@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore';
 import { useFirestoreQuery } from './useQuery';
 import { FirestoreQueryState } from './types';
-import { firestoreDb } from 'src/packages/firebase/firestoreDb';
+import { firestoreDb } from '@packages/firebase/firestoreDb';
 
 type FirestoreQueryOptions = {
   enabled?: boolean;

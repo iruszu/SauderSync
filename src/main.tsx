@@ -4,6 +4,8 @@ import App from './App.tsx';
 import { Providers } from './Providers.tsx';
 import { RuntimeEnvironmentConfig } from '@runtime/types.ts';
 
+import '@packages/firebase/initializeFirebase.ts';
+
 declare const __RUNTIME_CONFIG__: RuntimeEnvironmentConfig;
 
 const initializeApp = () => {

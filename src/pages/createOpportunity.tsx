@@ -1,7 +1,7 @@
 import { Button, Fieldset, TextInput, Title } from '@mantine/core';
-import { createFirestoreDocument } from '/Users/kellie/boilerplateRevised/src/packages/firestoreAsQuery/firestoreRequests.ts';
 import { useState } from 'react';
 import { nanoid as nano } from 'nanoid';
+import { createFirestoreDocument } from '@packages/firestoreAsQuery';
 
 //createFirestoreDocument(path, data, true);
 export const id = nano(5);
@@ -15,7 +15,7 @@ const [name, setName] = useState('');
     const handleSubmit = async () => {
         await createFirestoreDocument(
           `opportunities/${id}`,
-           { email },
+          { name, email }, // <-- pass an object!
           true
         );
         setName('');
