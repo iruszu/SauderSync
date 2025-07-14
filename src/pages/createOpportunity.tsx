@@ -15,7 +15,7 @@ const [name, setName] = useState('');
     const handleSubmit = async () => {
         await createFirestoreDocument(
           `opportunities/${id}`,
-            { name, email },
+           { email },
           true
         );
         setName('');
