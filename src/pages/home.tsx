@@ -62,8 +62,17 @@ export const Home = (): ReactElement => {
 
     const filteredEvents = useMemo(() => MOCK_OPPORTUNITIES.filter((opp) => {
         console.log('use memo running')
-        if (opp.status === 'upcoming' && statusFilter === 'upcoming') return true
-        return false
+        if (statusFilter === 'default') {
+            return true;
+        } else if (opp.status === 'upcoming' && statusFilter === 'upcoming') {
+            return true;
+        } else if (opp.status === 'active' && statusFilter === 'active') {
+            return true;
+        } else if (opp.status === 'finished' && statusFilter === 'finished') {
+            return true;
+        } 
+        return false;
+
     }), [statusFilter])
 
     console.log('re-rendering component')
@@ -87,17 +96,6 @@ export const Home = (): ReactElement => {
                         ]}
                         value={statusFilter}
                         onChange={(value) => (setStatusFilter(value ?? 'default' ))}
-                    />
-                    <Select
-                        label="Type Filter"
-                        placeholder="Pick type"
-                        data={[
-                            { value: 'default', label: 'All Types' },
-                            { value: 'type1', label: 'Type 1' },
-                            { value: 'type2', label: 'Type 2' },
-                        ]}
-                        value={typeFilter}
-                        onChange={setTypeFilter}
                     />
                 </Flex>
                 <Grid 
