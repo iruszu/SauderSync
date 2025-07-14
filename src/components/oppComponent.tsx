@@ -3,16 +3,17 @@ import { Card, Image, Text, Badge, Button, Group, ScrollArea} from '@mantine/cor
 
 
 interface componentProps {
+    key: string;
     image: string;
     title: string;
     date: string;
     description: string;
     status: string;
-    button: string;
+    eventURL: string;
   }
   
 
-const MyComponent = ({ image, title, date, description, status, button }: componentProps) => {
+const MyComponent = ({ key, image, title, date, description, status, eventURL }: componentProps) => {
     const getBadgeColor = (status: string) => {
         switch (status) {
           case 'active':
@@ -28,6 +29,7 @@ const MyComponent = ({ image, title, date, description, status, button }: compon
     return (
         <Card shadow="sm" padding="lg" radius="md" withBorder style={{ height: '100%', maxWidth: '380px', margin: '0 auto' }}>
             <div style={{ height: '160px', overflow: 'hidden' }}>
+
                 <Image
                 src={image}
                 alt={title}
@@ -49,7 +51,7 @@ const MyComponent = ({ image, title, date, description, status, button }: compon
                 </Text>
             </ScrollArea>
 
-            <Button color="blue" fullWidth mt="md" radius="md" component="a" href={button} target="_blank">
+            <Button color="blue" fullWidth mt="md" radius="md" component="a" href={eventURL} target="_blank">
                 Click here to sign up
             </Button>
         </Card>
