@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import Debugger from './debugger';
+import CreateOpportunity from './createOpportunity';
 import BrandingPage from './branding';
 import Home from './home';
 import Opportunities from './opportunities';
@@ -11,7 +11,7 @@ export const RootRoutes = () => {
       <Route path="/" element={<Home/>} />
       <Route path="/opportunities" element={<Opportunities/>} />
       <Route path="/authentication" element={<AuthenticationForm/>} />
-      <Route path="/debugger" element={<Debugger />} />
+      <Route path="/createOpportunity" element={<CreateOpportunity />} />
       <Route path="/branding" element={<BrandingPage />} />
       <Route path="/*" element={<Navigate to="/" />} />
     </Routes>
