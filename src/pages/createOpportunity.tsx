@@ -1,8 +1,9 @@
-import { Fieldset, TextInput } from '@mantine/core';
+import { Fieldset, TextInput, Title } from '@mantine/core';
 
 function CreateOpportunity() {
   return (
-    <Fieldset legend="Personal information">
+    <Fieldset>
+      <Title order={4} mb="md">Create Opportunity</Title>
       <TextInput label="Your name" placeholder="Your name" />
       <TextInput label="Email" placeholder="Email" mt="md" />
     </Fieldset>
