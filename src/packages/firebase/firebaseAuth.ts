@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import './initializeFirebase';
+import './initializeFirebase'; // Ensure Firebase is initialized before using auth
 
 export const auth = getAuth();
 

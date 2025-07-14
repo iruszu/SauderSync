@@ -25,13 +25,13 @@
       "type": "image/jpg"
     }
   ],
-  "theme_color": "#3889C7",
-  "background_color": "#c8aac9",
+  "theme_color": "#f2f2f2",
+  "background_color": "#f2f2f2",
   "theme_colors": {
     "primaryColor": "#3889C7"
   },
   "replaceGlobalBackground": {
-    "light": "#c8aac9",
+    "light": "#f2f2f2",
     "dark": "#4126f7"
   },
   "defaultBorderRadius": "5",
