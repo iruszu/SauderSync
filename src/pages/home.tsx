@@ -1,9 +1,10 @@
-import { ReactElement } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
+import { Grid, Flex, Title, Box, Select } from '@mantine/core';
+
 import MyComponent from '@components/oppComponent';
-import { Grid, Flex, Title, Box } from '@mantine/core';
 import NavigationBar from '@components/navBar';
 
-const opportunities = [
+const MOCK_OPPORTUNITIES = [
     {
         title: "nwHacks",
         date: "2026-01-17/18",
@@ -56,6 +57,17 @@ const opportunities = [
 
 
 export const Home = (): ReactElement => { 
+    const [statusFilter, setStatusFilter] = useState<string | null>('default')
+    const [typeFilter, setTypeFilter] = useState<string | null>('default')
+
+    const filteredEvents = useMemo(() => MOCK_OPPORTUNITIES.filter((opp) => {
+        console.log('use memo running')
+        if (opp.status === 'upcoming' && statusFilter === 'upcoming') return true
+        return false
+    }), [statusFilter])
+
+    console.log('re-rendering component')
+
     return (
         <Flex>
             <Box w={300} p="md" bg="gray.0" h="100dvh">
@@ -63,6 +75,31 @@ export const Home = (): ReactElement => {
             </Box>
             <Box p="md" style={{ flex: 1 }}>
                 <Title order={2} mb="md">Home</Title>
+                <Flex mb="md" gap="md">
+                    <Select
+                        label="Status Filter"
+                        placeholder="Pick status"
+                        data={[
+                            { value: 'default', label: 'All Statuses' }, 
+                            { value: 'active', label: 'Active' },
+                            { value: 'upcoming', label: 'Upcoming' },
+                            { value: 'finished', label: 'Finished' },
+                        ]}
+                        value={statusFilter}
+                        onChange={(value) => (setStatusFilter(value ?? 'default' ))}
+                    />
+                    <Select
+                        label="Type Filter"
+                        placeholder="Pick type"
+                        data={[
+                            { value: 'default', label: 'All Types' },
+                            { value: 'type1', label: 'Type 1' },
+                            { value: 'type2', label: 'Type 2' },
+                        ]}
+                        value={typeFilter}
+                        onChange={setTypeFilter}
+                    />
+                </Flex>
                 <Grid 
                     gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}
                     justify="center" 
@@ -70,7 +107,7 @@ export const Home = (): ReactElement => {
                     style={{ marginTop: '20px', marginLeft: '20px', marginRight: '20px' }}
 
                     >
-                    {opportunities.map((opportunity, index) => (
+                    {filteredEvents.map((opportunity, index) => (
                         <Grid.Col 
                         key={index} 
                         span={{ base: 12, md: 6, lg: 4 }}>
