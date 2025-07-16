@@ -1,5 +1,5 @@
 .navbar {
-  height: 100%;
+  height: 800px;
   width: 100%;
   padding: var(--mantine-spacing-md);
   display: flex;
@@ -33,25 +33,30 @@
   padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
   border-radius: var(--mantine-radius-sm);
   font-weight: 500;
-}
 
-.link:hover {
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
-  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
-}
+  @mixin hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
 
-.link:hover .linkIcon {
-  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
-}
+    .linkIcon {
+      color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+    }
+  }
 
-.link[data-active] {
-  background-color: var(--mantine-color-blue-light);
-  color: var(--mantine-color-blue-light-color);
-}
+  &[data-active] {
+    &,
+    &:hover {
+      background-color: var(--mantine-color-green-light);
+      color: var(--mantine-color-green-light-color);
 
-.link[data-active] .linkIcon,
-.link[data-active]:hover .linkIcon {
-  color: var(--mantine-color-blue-light-color);
+      .linkIcon {
+        color: var(--mantine-color-green-light-color);
+      }
+    }
+  }
 }
 
 .linkIcon {
