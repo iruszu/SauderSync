@@ -1,3 +1,4 @@
+import { NavbarSimple } from '@components/navigationBar';
 import { AppShell, Burger } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
@@ -24,10 +25,13 @@ function HomeNew() {
         <div>Logo</div>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md">Navbar</AppShell.Navbar>
+          <AppShell.Navbar p="md">
+              <NavbarSimple />
+      </AppShell.Navbar>
 
       <AppShell.Main>Main</AppShell.Main>
     </AppShell>
   );
 }
+
 export default HomeNew;
