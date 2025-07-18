@@ -2,7 +2,7 @@ import  ComponentLayout from '@components/componentList';
 import { NavbarSimple } from '@components/navigationBar';
 import { AppShell, Burger } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-
+import logo from '@components/ubcSauder.jpg'; 
 
 
 function Home() {
@@ -10,23 +10,24 @@ function Home() {
 
   return (
     <AppShell
-      header={{ height: 60 }}
+     
       navbar={{
         width: 300,
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
-      padding="md"
+ 
     >
-      <AppShell.Header>
+
+              <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
         <Burger
           opened={opened}
           onClick={toggle}
           hiddenFrom="sm"
           size="sm"
         />
-        <div>A top bar design goes here</div>
-      </AppShell.Header>
+              <img src={logo} height={40} />
+      </div>
 
           <AppShell.Navbar p="md">
               <NavbarSimple />
