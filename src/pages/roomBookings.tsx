@@ -3,17 +3,18 @@ import { Flex, Title, Box, Select } from '@mantine/core';
 import { DateTab } from '@components/roomBookings/DateSelector';
 import RoomTabs from '@components/roomBookings/RoomTabs'; 
 import { ViewTab } from '@components/roomBookings/ViewSelector'; 
+
 export const RoomBookings = (): ReactElement => { 
 
     return (
         <Flex>
             
             <Box p="md" style={{ flex: 1 }}>
-                <Title order={2} mb="md">Book a Room</Title>
+                <h1> Book a Room </h1>
                 <Flex mb="md" gap="md">
                     <RoomTabs /> 
                     <ViewTab />
-                    <Title order={3} mb="md">Date</Title>
+                    <h3>Date</h3>
                     <DateTab />
                 </Flex>
                 
