@@ -25,18 +25,18 @@
       "type": "image/jpg"
     }
   ],
-  "theme_color": "#f2f2f2",
-  "background_color": "#f2f2f2",
+  "theme_color": "#FDFDFD",
+  "background_color": "#FDFDFD",
   "theme_colors": {
-    "primaryColor": "#3889C7"
+    "primaryColor": "#FDFDFD"
   },
   "replaceGlobalBackground": {
-    "light": "#f2f2f2",
-    "dark": "#4126f7"
+    "light": "#FDFDFD",
+    "dark": "#FDFDFD"
   },
   "defaultBorderRadius": "5",
   "fontFamily": "Inter",
   "headings": {
-    "fontFamily": "Philosopher"
+    "fontFamily": "Inter"
   }
 }
