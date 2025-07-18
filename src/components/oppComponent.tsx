@@ -27,7 +27,7 @@ const MyComponent = ({ key, image, title, date, description, status, eventURL }:
         }
     };
     return (
-        <Card shadow="sm" padding="lg" radius="md" withBorder style={{ height: '100%', maxWidth: '380px', margin: '0 auto' }}>
+        <Card shadow="sm" padding="lg" radius="xl" withBorder style={{ height: '100%', maxWidth: '380px', margin: '0 auto' }}>
             <div style={{ height: '160px', overflow: 'hidden' }}>
 
                 <Image
