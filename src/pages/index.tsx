@@ -4,7 +4,6 @@ import Home from './home';
 import Opportunities from './opportunities';
 import { AuthenticationForm } from './login/AuthenticationForm';
 
-
 export const RootRoutes = () => {
   return (
     <Routes>
