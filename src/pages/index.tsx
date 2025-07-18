@@ -5,6 +5,7 @@ import CreateOpportunity from './createOpportunity';
 import Home from './home';
 import Opportunities from './opportunities';
 import { AuthenticationForm } from './login/AuthenticationForm';
+<<<<<<< HEAD
 import HomeNew from './homeNew';
 import RoomBookings from './roomBookings';
 =======
@@ -16,6 +17,14 @@ import Opportunities from './opportunities';
 import { AuthenticationForm } from './login/AuthenticationForm';
 
 >>>>>>> ccdd2fe (added new navbar and replaced homepage)
+=======
+<<<<<<< HEAD
+
+=======
+import HomeNew from './homeNew';
+import RoomBookings from './roomBookings';
+>>>>>>> 63f39d9 (added room bookings page)
+>>>>>>> 1d45e74 (added room bookings page)
 
 export const RootRoutes = () => {
   return (
@@ -26,6 +35,7 @@ export const RootRoutes = () => {
       <Route path="/createOpportunity" element={<CreateOpportunity />} />
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       <Route path="/homeNew" element={<HomeNew/>} />
       <Route path="/roomBookings" element={<RoomBookings/>} />
 =======
@@ -33,6 +43,12 @@ export const RootRoutes = () => {
 >>>>>>> ccdd2fe (added new navbar and replaced homepage)
 =======
 >>>>>>> 48d9bbd (fixed index page)
+=======
+=======
+      <Route path="/homeNew" element={<HomeNew/>} />
+      <Route path="/roomBookings" element={<RoomBookings/>} />
+>>>>>>> 63f39d9 (added room bookings page)
+>>>>>>> 1d45e74 (added room bookings page)
       <Route path="/*" element={<Navigate to="/" />} />
     </Routes>
   );
