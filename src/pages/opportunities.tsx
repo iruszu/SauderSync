@@ -9,7 +9,6 @@ import { getFirestoreCollection } from '@packages/firestoreAsQuery/firestoreRequ
 export const Opportunities = (): ReactElement => { 
     const [opportunities, setOpportunities] = useState<{ key: string; image: string; title: string; date: string; description: string; status: string; eventURL: string; }[]>([]);
 
-    // Fetch opportunities from Firestore
     useEffect(() => {
         const fetchOpportunities = async () => {
           try {
