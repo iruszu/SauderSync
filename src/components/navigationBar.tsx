@@ -5,47 +5,55 @@ import {
   IconInfoSquareRoundedFilled,
   IconLogout,
   IconBookmarksFilled,
-    IconSettings,
-    IconLibraryFilled,
+  IconSettings,
+  IconLibraryFilled,
 } from '@tabler/icons-react';
 import { Code, Group } from '@mantine/core';
 import classes from './NavbarSimple.module.css';
 import logo from './ubcSauder.jpg'; // Adjust the path as needed
+import { NavLink } from '@mantine/core';
 import { Link } from 'react-router-dom';
 
-const data = [
-  { link: '/home', label: 'Home', icon: IconHomeFilled },
-  { link: '/createOpportunities', label: 'Opportunities', icon: IconBriefcase2Filled },
-    { link: '', label: 'Room Bookings', icon: IconBookmarksFilled },
-    {link: '', label: 'Library Catalog', icon: IconLibraryFilled},
-    { link: '', label: 'About', icon: IconInfoSquareRoundedFilled },
 
+
+// <NavLink
+//   label="Home"
+//   component={Link}
+//   to="/"
+// />
+
+const data = [
+  { link: '/', label: 'Home', icon: IconHomeFilled },
+  { link: '/opportunities', label: 'Opportunities', icon: IconBriefcase2Filled },
+  { link: '/roomBookings', label: 'Room Bookings', icon: IconBookmarksFilled },
+  { link: '/createOpportunity', label: 'Library Catalog', icon: IconLibraryFilled },
+  { link: '', label: 'About', icon: IconInfoSquareRoundedFilled },
 ];
 
 export function NavbarSimple() {
   const [active, setActive] = useState('Billing');
 
   const links = data.map((item) => (
-    <Link
+    <NavLink
       className={classes.link}
-      data-active={item.label === active || undefined}
+      label={item.label}
+      component={Link}
       to={item.link}
+      data-active={item.label === active || undefined}
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
+      onClick={() => {
         setActive(item.label);
       }}
-    >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </Link>
+      leftSection={<item.icon className={classes.linkIcon} stroke={1.5} />}
+
+    />
   ));
 
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
-          <img src={logo} className={classes.logo}/>
+          <img src={logo} className={classes.logo} />
         </Group>
         {links}
       </div>
