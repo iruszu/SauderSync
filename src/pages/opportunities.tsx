@@ -3,6 +3,16 @@ import MyComponent from '@components/oppComponent';
 import { Grid, Box, Flex, Title } from '@mantine/core';
 import { getFirestoreCollection } from '@packages/firestoreAsQuery/firestoreRequests';
 
+type Opportunity = {
+  key: string;
+  image: string;
+  title: string;
+  date: string;
+  description: string;
+  status: string;
+  eventURL: string;
+};
+
 export const Opportunities = (): ReactElement => {
   const [opportunities, setOpportunities] = useState<
     {
@@ -19,16 +29,19 @@ export const Opportunities = (): ReactElement => {
   useEffect(() => {
     const fetchOpportunities = async () => {
       try {
-        const data = await getFirestoreCollection<{
-          key: string;
-          image: string;
-          title: string;
-          date: string;
-          description: string;
-          status: string;
-          eventURL: string;
-        }>('opportunities');
-        setOpportunities(data);
+        // 1. Fetch all clubs
+        const clubs = await getFirestoreCollection<{ id: string }>('clubs');
+        let allOpportunities: Opportunity[] = [];
+
+        // 2. For each club, fetch its opportunities subcollection
+        for (const club of clubs) {
+          const clubOpportunities = await getFirestoreCollection<Opportunity>(
+            `clubs/${club.id}/opportunities`,
+          );
+          allOpportunities = allOpportunities.concat(clubOpportunities);
+        }
+
+        setOpportunities(allOpportunities);
       } catch (error) {
         console.error('Error fetching opportunities:', error);
       }
