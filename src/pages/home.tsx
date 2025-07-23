@@ -3,30 +3,7 @@ import { useDisclosure } from '@mantine/hooks';
 function Home() {
   //   const [opened, { toggle }] = useDisclosure();
 
-  return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{
-        width: 300,
-        breakpoint: 'sm',
-        collapsed: { mobile: !opened },
-      }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-        <div>A top bar design goes here</div>
-      </AppShell.Header>
-
-      <AppShell.Navbar p="md">
-        <NavbarSimple />
-      </AppShell.Navbar>
-
-      <AppShell.Main>
-        <ComponentLayout />
-      </AppShell.Main>
-    </AppShell>
-  );
+  return <>{/* Home page content here */}</>;
 }
 
 export default Home;
