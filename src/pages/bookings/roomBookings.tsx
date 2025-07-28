@@ -2,10 +2,11 @@
 import { Button, Card, TextInput, Group, Text, Image, Stack, Flex, Box, Center } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { IconCalendar, IconUsers, IconDeviceDesktop, IconSquare } from "@tabler/icons-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { format, addDays, startOfWeek, endOfWeek, isSameDay, eachDayOfInterval } from "date-fns"
 import { notifications } from "@mantine/notifications"
-
+import { v4 as uuidv4 } from 'uuid';
+import { createFirestoreDocument, getFirestoreCollection, updateFirestoreDocument } from "@packages/firestoreAsQuery/firestoreRequests"
 const timeSlots = ["10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm"]
 
 interface Booking {
@@ -20,76 +21,26 @@ interface Booking {
 
 interface Room {
   id: string
+  area: string
   capacity: number
   amenities: string[]
   image: string
-  policy: {
-    maxHours: number
-    maxBookings: number
-    cancellation: string
-  }
-  availability: number[]
+  availability: number[];
 }
 
-const buildingRooms: Record<string, Room[]> = {
-  "Birmingham": [
-    { id: "HA 191A", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0] },
-    { id: "HA 191B", capacity: 4, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 191C", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 191D", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 191E", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 192A", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 192B", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 192C", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 192D", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 192E", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 194", capacity: 12, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 195", capacity: 14, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
-  ],
-  "4th Floor": [
-    { id: "HA 491A", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 491B", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 491C", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 492A", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 492B", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 492C", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
-  ],
-  "CLC": [
-    { id: "CLC 202", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 203", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 204", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 310", capacity: 4, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 311", capacity: 4, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 312", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 313", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 315", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 317", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 318", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 319", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 320", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "CLC 321", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
-  ],
-  "Floor 0": [
-    { id: "HA 092", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 093", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 094", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 095", capacity: 8, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: "HA 096", capacity: 6, amenities: ["TV", "Whiteboard"], image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", policy: { maxHours: 2, maxBookings: 1, cancellation: "2 hours" }, availability: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
-  ]
-}
 
 export default function Rooms() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [viewType, setViewType] = useState<"Day" | "Week">("Day")
-  const [selectedBuilding, setSelectedBuilding] = useState("Birmingham")
+  const [selectedArea, setSelectedBuilding] = useState("Birmingham")
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<{roomIndex: number, slots: number[]}>({roomIndex: -1, slots: []})
   const [bookingDescription, setBookingDescription] = useState("")
   const [isSelecting, setIsSelecting] = useState(false)
   const [dragStart, setDragStart] = useState<{roomIndex: number, slotIndex: number} | null>(null)
   const [bookings, setBookings] = useState<Booking[]>([])
   const [expandedRoom, setExpandedRoom] = useState<number | null>(null)
-
-  const currentRooms = buildingRooms[selectedBuilding] || []
+  const [currentRooms, setCurrentRooms] = useState<Room[]>([]);
+  
   
   // Week view helper functions
   const getWeekStart = (date: Date) => {
@@ -163,38 +114,89 @@ export default function Rooms() {
     return `${timeSlots[startSlot]} - ${timeSlots[endSlot + 1] || timeSlots[endSlot]}`
   }
 
-  const handleBookRoom = () => {
-    if (!bookingDescription.trim() || selectedTimeSlots.slots.length === 0 || !selectedDate) return
-    
+  // Fetch bookings and rooms
+  useEffect(() => {
+    const fetchBookingsAndRooms = async () => {
+      try {
+        const bookingsData = await getFirestoreCollection<Booking>("bookings");
+        const roomsData = await getFirestoreCollection<Room>("rooms");
+        const filteredRooms = roomsData.filter((room) => room.area === selectedArea);
+  
+        // Filter bookings for the selected date
+        const filteredBookings = bookingsData.filter(
+          (booking) => booking.date === format(selectedDate, "yyyy-MM-dd")
+        );
+  
+        // Generate availability array for each room
+        const updatedRooms = filteredRooms.map((room) => {
+          const availability = Array(11).fill(0); // 48 slots for 30-minute intervals (7 AM to 9 PM)
+          filteredBookings
+            .filter((booking) => booking.roomId === room.id)
+            .forEach((booking) => {
+              for (let i = booking.startTime; i < booking.endTime; i++) {
+                availability[i] = 1; // Mark slot as booked
+              }
+            });
+          return { ...room, availability };
+        });
+  
+        setBookings(filteredBookings);
+        setCurrentRooms(updatedRooms);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchBookingsAndRooms();
+  }, [selectedDate, selectedArea]); // Added selectedArea to the dependency array
+
+  const handleBookRoom = async () => {
+    if (!bookingDescription.trim() || selectedTimeSlots.slots.length === 0 || !selectedDate) return;
+  
     const newBooking: Booking = {
-      id: Date.now().toString(),
+      id: uuidv4(),
       roomId: currentRooms[selectedTimeSlots.roomIndex].id,
       date: format(selectedDate, "yyyy-MM-dd"),
       startTime: Math.min(...selectedTimeSlots.slots),
       endTime: Math.max(...selectedTimeSlots.slots),
       description: bookingDescription,
-      userName: "Current User"
+      userName: "Current User",
+    };
+  
+    try {
+      // Add booking to Firestore
+      await createFirestoreDocument(`bookings/${newBooking.id}`, newBooking, false);
+  
+      // Update local bookings state
+      setBookings(prev => [...prev, newBooking]);
+  
+      // Update room availability locally
+      const updatedRooms = [...currentRooms];
+      selectedTimeSlots.slots.forEach(slot => {
+        updatedRooms[selectedTimeSlots.roomIndex].availability[slot] = 1;
+      });
+  
+      // Update room availability in Firestore
+      const roomId = currentRooms[selectedTimeSlots.roomIndex].id;
+      const updatedAvailability = updatedRooms[selectedTimeSlots.roomIndex].availability;
+  
+      await updateFirestoreDocument(`rooms/${roomId}`, { availability: updatedAvailability });
+  
+      // Reset UI state
+      setSelectedTimeSlots({ roomIndex: -1, slots: [] });
+      setBookingDescription("");
+      setExpandedRoom(null);
+  
+      notifications.show({
+        title: 'Room Booked',
+        message: 'Your room has been successfully booked!',
+        color: 'blue',
+      });
+    } catch (error) {
+      console.error("Error booking room:", error);
     }
-    
-    setBookings(prev => [...prev, newBooking])
-    
-    // Update room availability
-    const updatedRooms = [...currentRooms]
-    selectedTimeSlots.slots.forEach(slot => {
-      updatedRooms[selectedTimeSlots.roomIndex].availability[slot] = 1
-    })
-    
-    // Reset form
-    setSelectedTimeSlots({ roomIndex: -1, slots: [] })
-    setBookingDescription("")
-    setExpandedRoom(null)
-
-    notifications.show({
-      title: 'Room Booked',
-      message: 'Your room has been successfully booked!',
-      color: 'blue'
-    })
-  }
+  };
+  
 
   const handleBuildingChange = (building: string) => {
     setSelectedBuilding(building)
@@ -228,25 +230,25 @@ export default function Rooms() {
           {/* Filters */}
           <Group gap="sm" mb="xl">
             <Button 
-              variant={selectedBuilding === "Birmingham" ? "filled" : "outline"}
+              variant={selectedArea === "Birmingham" ? "filled" : "outline"}
               onClick={() => handleBuildingChange("Birmingham")}
             >
               Birmingham
             </Button>
             <Button 
-              variant={selectedBuilding === "4th Floor" ? "filled" : "outline"}
+              variant={selectedArea === "4th Floor" ? "filled" : "outline"}
               onClick={() => handleBuildingChange("4th Floor")}
             >
               4th Floor
             </Button>
             <Button 
-              variant={selectedBuilding === "CLC" ? "filled" : "outline"}
+              variant={selectedArea === "CLC" ? "filled" : "outline"}
               onClick={() => handleBuildingChange("CLC")}
             >
               CLC
             </Button>
             <Button 
-              variant={selectedBuilding === "Floor 0" ? "filled" : "outline"}
+              variant={selectedArea === "Floor 0" ? "filled" : "outline"}
               onClick={() => handleBuildingChange("Floor 0")}
             >
               Floor 0
@@ -255,7 +257,7 @@ export default function Rooms() {
 
           {/* Date and View Controls */}
           <Flex justify="space-between" align="center" mb="xl">
-            <Text size="lg" fw={600}>{selectedBuilding}</Text>
+            <Text size="lg" fw={600}>{selectedArea}</Text>
             
             <Group gap="md">
               <Group gap="xs">
@@ -333,7 +335,7 @@ export default function Rooms() {
                             const isSelected = selectedTimeSlots.roomIndex === index && selectedTimeSlots.slots.includes(timeIndex)
                             
                             return (
-                              <Box key={timeIndex} style={{ textAlign: 'center' }}>
+                              <Box key={timeIndex} style={{ textAlign: 'left' }}>
                                 <Text size="xs" c="dimmed" mb="xs">{time}</Text>
                                 <Box 
                                   style={{
@@ -366,11 +368,11 @@ export default function Rooms() {
                         <div>
                           <Text fw={600} mb="md">Room Booking Policy</Text>
                           <Stack gap="xs" mb="lg">
-                            <Text size="sm" c="dimmed">Max {room.policy.maxHours} hours per student</Text>
-                            <Text size="sm" c="dimmed">{room.policy.maxBookings} booking per day</Text>
+                            <Text size="sm" c="dimmed">Max 2 hours per student</Text>
+                            <Text size="sm" c="dimmed">1 booking per day</Text>
                           </Stack>
                           <Text fw={600} mb="md">Cancellation Policy</Text>
-                          <Text size="sm" c="dimmed">Please cancel {room.policy.cancellation} in advance</Text>
+                          <Text size="sm" c="dimmed">Please cancel 2 in advance</Text>
                         </div>
                         
                         <Stack gap="md">
