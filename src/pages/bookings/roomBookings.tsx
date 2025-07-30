@@ -57,11 +57,11 @@ export default function Rooms() {
   }
   
   const getWeekRange = (date: Date) => {
-    if (!date || isNaN(date.getTime())) return "Invalid date range";
-    const start = startOfWeek(date, { weekStartsOn: 1 });
-    const end = endOfWeek(date, { weekStartsOn: 1 });
-    return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`;
-  };
+    if (!date || isNaN(date.getTime())) return "Invalid date range"
+    const start = getWeekStart(date)
+    const end = endOfWeek(date, { weekStartsOn: 1 })
+    return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`
+  }
 
   // Week highlighting helper functions
   const getSelectedWeekDays = (date: Date) => {
@@ -277,17 +277,42 @@ export default function Rooms() {
               
               <Group gap="xs" align="center">
                 <Text size="sm" fw={500}>Date</Text>
+                <div>
                 <DatePickerInput
                   leftSection={<IconCalendar size={16} />}
                   value={selectedDate}
-                  onChange={(value) => setSelectedDate(value ? new Date(value) : new Date())}
+                  onChange={(date) => {
+                    if (date) {
+                      // Parse date string as local date to avoid timezone issues
+                      if (typeof date === 'string') {
+                        const [year, month, day] = date.split('-').map(Number)
+                        const localDate = new Date(year, month - 1, day) // month is 0-indexed
+                        setSelectedDate(localDate)
+                      } else {
+                        setSelectedDate(date)
+                      }
+                    }
+                  }}
                   placeholder="Pick a date"
                   w={240}
-                  valueFormat={viewType === "Week" ? 
-                    (selectedDate ? getWeekRange(selectedDate) : "Pick a week") : 
-                    "MMM DD, YYYY"
-                  }
+                  valueFormat="MMM DD, YYYY"
+                  styles={{
+                    input: {
+                      fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important',
+                      fontWeight: '400',
+                      letterSpacing: '0.5px',
+                      textRendering: 'optimizeLegibility',
+                      WebkitFontSmoothing: 'antialiased',
+                      MozOsxFontSmoothing: 'grayscale'
+                    }
+                  }}
                 />
+                {viewType === "Week" && selectedDate && (
+                  <Text size="xs" c="dimmed" mt={4}>
+                    Week: {getWeekRange(selectedDate)}
+                  </Text>
+                )}
+              </div>
               </Group>
             </Group>
           </Flex>
