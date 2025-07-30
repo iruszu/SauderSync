@@ -3,10 +3,11 @@ import { Button, Card, TextInput, Group, Text, Image, Stack, Flex, Box, Center }
 import { DatePickerInput } from "@mantine/dates"
 import { IconCalendar, IconUsers, IconDeviceDesktop, IconSquare } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
+import "@mantine/dates/styles.css";
 import { format, addDays, startOfWeek, endOfWeek, isSameDay, eachDayOfInterval } from "date-fns"
 import { notifications } from "@mantine/notifications"
 import { v4 as uuidv4 } from 'uuid';
-import { createFirestoreDocument, getFirestoreCollection, updateFirestoreDocument } from "@packages/firestoreAsQuery/firestoreRequests"
+import { createFirestoreDocument, getFirestoreCollection } from "@packages/firestoreAsQuery/firestoreRequests"
 const timeSlots = ["10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm"]
 
 interface Booking {
@@ -27,6 +28,7 @@ interface Room {
   image: string
   availability: number[];
 }
+
 
 
 export default function Rooms() {
@@ -55,11 +57,11 @@ export default function Rooms() {
   }
   
   const getWeekRange = (date: Date) => {
-    if (!date || isNaN(date.getTime())) return "Invalid date range"
-    const start = getWeekStart(date)
-    const end = endOfWeek(date, { weekStartsOn: 1 })
-    return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`
-  }
+    if (!date || isNaN(date.getTime())) return "Invalid date range";
+    const start = startOfWeek(date, { weekStartsOn: 1 });
+    const end = endOfWeek(date, { weekStartsOn: 1 });
+    return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`;
+  };
 
   // Week highlighting helper functions
   const getSelectedWeekDays = (date: Date) => {
@@ -129,11 +131,12 @@ export default function Rooms() {
   
         // Generate availability array for each room
         const updatedRooms = filteredRooms.map((room) => {
-          const availability = Array(11).fill(0); // 48 slots for 30-minute intervals (7 AM to 9 PM)
+          const availability = Array(12).fill(0); // 48 slots for 30-minute intervals (7 AM to 9 PM)
           filteredBookings
             .filter((booking) => booking.roomId === room.id)
             .forEach((booking) => {
-              for (let i = booking.startTime; i < booking.endTime; i++) {
+                console.log(booking.startTime, booking.endTime)
+              for (let i = booking.startTime; i <= booking.endTime; i++) {
                 availability[i] = 1; // Mark slot as booked
               }
             });
@@ -165,6 +168,7 @@ export default function Rooms() {
   
     try {
       // Add booking to Firestore
+      console.log(newBooking.startTime, newBooking.endTime)
       await createFirestoreDocument(`bookings/${newBooking.id}`, newBooking, false);
   
       // Update local bookings state
@@ -175,12 +179,6 @@ export default function Rooms() {
       selectedTimeSlots.slots.forEach(slot => {
         updatedRooms[selectedTimeSlots.roomIndex].availability[slot] = 1;
       });
-  
-      // Update room availability in Firestore
-      const roomId = currentRooms[selectedTimeSlots.roomIndex].id;
-      const updatedAvailability = updatedRooms[selectedTimeSlots.roomIndex].availability;
-  
-      await updateFirestoreDocument(`rooms/${roomId}`, { availability: updatedAvailability });
   
       // Reset UI state
       setSelectedTimeSlots({ roomIndex: -1, slots: [] });
@@ -282,10 +280,13 @@ export default function Rooms() {
                 <DatePickerInput
                   leftSection={<IconCalendar size={16} />}
                   value={selectedDate}
-                  onChange={(value) => setSelectedDate(new Date(value ?? new Date()))}
+                  onChange={(value) => setSelectedDate(value ? new Date(value) : new Date())}
                   placeholder="Pick a date"
                   w={240}
-                  valueFormat={viewType === "Week" ? (selectedDate ? getWeekRange(selectedDate) : "Pick a date") : "MMM DD, YYYY"}
+                  valueFormat={viewType === "Week" ? 
+                    (selectedDate ? getWeekRange(selectedDate) : "Pick a week") : 
+                    "MMM DD, YYYY"
+                  }
                 />
               </Group>
             </Group>
@@ -313,14 +314,19 @@ export default function Rooms() {
                               <IconUsers size={16} />
                               <Text size="sm" c="dimmed">{room.capacity} people</Text>
                             </Group>
+                            {room.amenities.includes("TV") && (
                             <Group gap="xs">
-                              <IconDeviceDesktop size={16} />
-                              <Text size="sm" c="dimmed">TV</Text>
+                                <IconDeviceDesktop size={16} />
+                                <Text size="sm" c="dimmed">TV</Text>
                             </Group>
+                            )}
+
+                            {room.amenities.includes("Whiteboard") && (
                             <Group gap="xs">
-                              <IconSquare size={16} />
-                              <Text size="sm" c="dimmed">Whiteboard</Text>
+                                <IconSquare size={16} />
+                                <Text size="sm" c="dimmed">Whiteboard</Text>
                             </Group>
+                            )}
                           </Stack>
                         </Box>
                       </Flex>
