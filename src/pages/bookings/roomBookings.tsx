@@ -116,7 +116,6 @@ export default function Rooms() {
     return `${timeSlots[startSlot]} - ${timeSlots[endSlot + 1] || timeSlots[endSlot]}`
   }
 
-  // Fetch bookings and rooms
   useEffect(() => {
     const fetchBookingsAndRooms = async () => {
       try {
@@ -124,10 +123,22 @@ export default function Rooms() {
         const roomsData = await getFirestoreCollection<Room>("rooms");
         const filteredRooms = roomsData.filter((room) => room.area === selectedArea);
   
-        // Filter bookings for the selected date
-        const filteredBookings = bookingsData.filter(
-          (booking) => booking.date === format(selectedDate, "yyyy-MM-dd")
-        );
+        let filteredBookings: Booking[] = [];
+        if (viewType === "Week") {
+          // Get all dates in the selected week
+          const weekDays = getWeekDays(selectedDate);
+          const weekDates = weekDays.map((day) => format(day, "yyyy-MM-dd"));
+  
+          // Filter bookings for all dates in the week range
+          filteredBookings = bookingsData.filter((booking) =>
+            weekDates.includes(booking.date)
+          );
+        } else {
+          // Filter bookings for the selected date
+          filteredBookings = bookingsData.filter(
+            (booking) => booking.date === format(selectedDate, "yyyy-MM-dd")
+          );
+        }
   
         // Generate availability array for each room
         const updatedRooms = filteredRooms.map((room) => {
@@ -135,7 +146,6 @@ export default function Rooms() {
           filteredBookings
             .filter((booking) => booking.roomId === room.id)
             .forEach((booking) => {
-                console.log(booking.startTime, booking.endTime)
               for (let i = booking.startTime; i <= booking.endTime; i++) {
                 availability[i] = 1; // Mark slot as booked
               }
@@ -151,7 +161,7 @@ export default function Rooms() {
     };
   
     fetchBookingsAndRooms();
-  }, [selectedDate, selectedArea]); // Added selectedArea to the dependency array
+  }, [selectedDate, selectedArea, viewType]); // Added viewType to the dependency array
 
   const handleBookRoom = async () => {
     if (!bookingDescription.trim() || selectedTimeSlots.slots.length === 0 || !selectedDate) return;
