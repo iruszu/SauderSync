@@ -1,8 +1,9 @@
 
-import { Button, Card, TextInput, Group, Text, Image, Stack, Flex, Box, Center } from "@mantine/core"
+import { Button, Card, TextInput, Group, Text, Image, Stack, Flex, Box, Center, SegmentedControl } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { IconCalendar, IconUsers, IconDeviceDesktop, IconSquare } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
+import styles from './roomBookings.module.css'
 import "@mantine/dates/styles.css";
 import { format, addDays, startOfWeek, endOfWeek, isSameDay, eachDayOfInterval } from "date-fns"
 import { notifications } from "@mantine/notifications"
@@ -235,55 +236,38 @@ export default function Rooms() {
         <div>
           <Text size="xl" fw={700} mb="sm">Book a room</Text>
           
-          {/* Filters */}
           <Group gap="sm" mb="xl">
-            <Button 
-              variant={selectedArea === "Birmingham" ? "filled" : "outline"}
-              onClick={() => handleBuildingChange("Birmingham")}
-            >
-              Birmingham
-            </Button>
-            <Button 
-              variant={selectedArea === "4th Floor" ? "filled" : "outline"}
-              onClick={() => handleBuildingChange("4th Floor")}
-            >
-              4th Floor
-            </Button>
-            <Button 
-              variant={selectedArea === "CLC" ? "filled" : "outline"}
-              onClick={() => handleBuildingChange("CLC")}
-            >
-              CLC
-            </Button>
-            <Button 
-              variant={selectedArea === "Floor 0" ? "filled" : "outline"}
-              onClick={() => handleBuildingChange("Floor 0")}
-            >
-              Floor 0
-            </Button>
-          </Group>
+            <SegmentedControl
+                radius="xl"
+                size="md"
+                value={selectedArea}
+                onChange={(value) => handleBuildingChange(value)}
+                data={[
+                { value: "Birmingham", label: "Birmingham" },
+                { value: "4th Floor", label: "4th Floor" },
+                { value: "CLC", label: "CLC" },
+                { value: "Floor 0", label: "Floor 0" },
+                ]}
+                classNames={styles}
+            />
+            </Group>
 
           {/* Date and View Controls */}
           <Flex justify="space-between" align="center" mb="xl">
             <Text size="lg" fw={600}>{selectedArea}</Text>
             
             <Group gap="md">
-              <Group gap="xs">
-                <Button 
-                  variant={viewType === "Day" ? "filled" : "outline"} 
-                  size="sm"
-                  onClick={() => handleViewTypeChange("Day")}
-                >
-                  Day
-                </Button>
-                <Button 
-                  variant={viewType === "Week" ? "filled" : "outline"} 
-                  size="sm"
-                  onClick={() => handleViewTypeChange("Week")}
-                >
-                  Week
-                </Button>
-              </Group>
+            <SegmentedControl
+                radius="xl"
+                size="sm"
+                value={viewType}
+                onChange={(value) => handleViewTypeChange(value as "Day" | "Week")}
+                data={[
+                    { value: "Day", label: "Day" },
+                    { value: "Week", label: "Week" },
+                ]}
+                classNames={styles}
+                />
               
               <Group gap="xs" align="center">
                 <Text size="sm" fw={500}>Date</Text>
