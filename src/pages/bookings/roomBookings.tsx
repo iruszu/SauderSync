@@ -12,6 +12,7 @@ import {
   SegmentedControl,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
+import { v4 as uuidv4 } from 'uuid';
 import {
   IconCalendar,
   IconUsers,
@@ -26,6 +27,8 @@ import {
   addDays,
   startOfWeek,
   endOfWeek,
+  isSameDay,
+  eachDayOfInterval,
 } from 'date-fns';
 import { notifications } from '@mantine/notifications';
 import {
@@ -66,6 +69,8 @@ interface Room {
   availability: number[];
 }
 
+
+
 export default function Rooms() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [viewType, setViewType] = useState<'Day' | 'Week'>('Day');
@@ -101,6 +106,19 @@ export default function Rooms() {
     const start = getWeekStart(date);
     const end = endOfWeek(date, { weekStartsOn: 1 });
     return `${format(start, 'MMM d')} - ${format(end, 'MMM d, yyyy')}`;
+  };
+
+  // Week highlighting helper functions
+  const getSelectedWeekDays = (date: Date) => {
+    if (!date || isNaN(date.getTime())) return [];
+    const start = getWeekStart(date);
+    return eachDayOfInterval({ start, end: addDays(start, 6) });
+  };
+
+  const isInSelectedWeek = (date: Date) => {
+    if (!selectedDate || isNaN(selectedDate.getTime())) return false;
+    const selectedWeekDays = getSelectedWeekDays(selectedDate);
+    return selectedWeekDays.some((weekDay) => isSameDay(weekDay, date));
   };
 
   const getBookingsForRoomAndDate = (roomId: string, date: string) => {
@@ -745,7 +763,3 @@ export default function Rooms() {
     </Stack>
   );
 }
-function uuidv4(): string {
-    throw new Error('Function not implemented.');
-}
-
