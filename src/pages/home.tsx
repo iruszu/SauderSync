@@ -154,14 +154,15 @@ function Home() {
     );
   };
 
-  return (
-    <div>
-      <MainSearch />
-      <ImageActionBanner />
 
-      {/* Upcoming Bookings Section */}
-      <div style={{ maxWidth: '1500px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'left', margin: '20px 0' }}>
+    return (
+      <div>
+        {/* MainSearch and ImageActionBanner remain full-width */}
+        <MainSearch />
+        <ImageActionBanner />
+  
+        {/* Upcoming Bookings Section */}
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>
             Upcoming Bookings
             <Link to="/roomBookings" style={{ textDecoration: 'none' }}>
@@ -198,11 +199,9 @@ function Home() {
             }}
           />
         </div>
-      </div>
-
-      {/* Opportunities Section */}
-      <div style={{ maxWidth: '1500px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'left', margin: '20px 0' }}>
+  
+        {/* Opportunities Section */}
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>
             Opportunities
             <Link to="/opportunities" style={{ textDecoration: 'none' }}>
@@ -225,8 +224,7 @@ function Home() {
           />
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
 export default Home;
