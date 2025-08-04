@@ -18,7 +18,7 @@ type Opportunity = {
   key: string;
   image: string;
   title: string;
-  date: string;
+  startDate: string;
   description: string;
   status: string;
   eventURL: string;
@@ -34,7 +34,6 @@ export const Opportunities = (): ReactElement => {
   useEffect(() => {
     const fetchOpportunities = async () => {
       try {
-        // 1. Fetch all clubs (including icon and clubName)
         const clubs = await getFirestoreCollection<{
           id: string;
           icon: string;
@@ -42,23 +41,29 @@ export const Opportunities = (): ReactElement => {
         }>('clubs');
         let allOpportunities: Opportunity[] = [];
 
-        // 2. For each club, fetch its opportunities subcollection
         for (const club of clubs) {
           const clubOpportunities = await getFirestoreCollection<
-            Omit<Opportunity, 'icon' | 'clubName'>
+            Omit<Opportunity, 'icon' | 'clubName' | 'key'>
           >(`clubs/${club.id}/opportunities`);
 
-          // 3. Attach club icon and clubName to each opportunity
-          const opportunitiesWithClub = clubOpportunities.map((opportunity) => ({
+          const opportunitiesWithClub = clubOpportunities.map((opportunity, idx) => ({
             ...opportunity,
             icon: club.icon,
             clubName: club.clubName,
+            key: `${club.id}-${idx}`, // Unique key for React
           }));
 
           allOpportunities = allOpportunities.concat(opportunitiesWithClub);
         }
 
-        setOpportunities(allOpportunities);
+        // Sort by startDate
+        const sortedOpportunities = allOpportunities.sort((a, b) => {
+          const dateA = Date.parse(a.startDate);
+          const dateB = Date.parse(b.startDate);
+          return dateA - dateB;
+        });
+
+        setOpportunities(sortedOpportunities);
       } catch (error) {
         console.error('Error fetching opportunities:', error);
       }
@@ -86,13 +91,13 @@ export const Opportunities = (): ReactElement => {
     try {
       // Parse the date from the opportunity
       // The date format appears to be something like "Jan 16, 2026"
-      const eventDate = new Date(opportunity.date);
+      const eventDate = new Date(opportunity.startDate);
       const today = new Date();
 
       // Check if date is valid
       if (isNaN(eventDate.getTime())) {
         console.error(
-          `Invalid date format for ${opportunity.title}: ${opportunity.date}`,
+          `Invalid date format for ${opportunity.title}: ${opportunity.startDate}`,
         );
         return true; // Include invalid dates in results to be safe
       }
@@ -104,7 +109,7 @@ export const Opportunities = (): ReactElement => {
         return eventDate >= today;
       }
     } catch (error) {
-      console.error('Error parsing date:', opportunity.date, error);
+      console.error('Error parsing date:', opportunity.startDate, error);
       return true; // Include in results if there's an error
     }
 
@@ -145,7 +150,7 @@ export const Opportunities = (): ReactElement => {
         >
           {filteredOpportunities.map((opportunity, index) => (
             <Grid.Col key={index} span={{ base: 12, md: 5, lg: 4 }}>
-              <MyComponent startDate={opportunity.date} {...opportunity} />
+              <MyComponent {...opportunity} />
             </Grid.Col>
           ))}
         </Grid>
