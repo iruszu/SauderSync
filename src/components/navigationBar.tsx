@@ -24,28 +24,47 @@ const data = [
   { link: '/', label: 'Home', icon: IconHomeFilled },
   { link: '/opportunities', label: 'Opportunities', icon: IconBriefcase2Filled },
   { link: '/roomBookings', label: 'Room Bookings', icon: IconBookmarksFilled },
-  { link: '/createOpportunity', label: 'Library Catalog', icon: IconLibraryFilled },
-  { link: '', label: 'About', icon: IconInfoSquareRoundedFilled },
+  { link: 'https://library.ubc.ca/', label: 'Library Catalog', icon: IconLibraryFilled, external: true  },
+  { link: '/createOpportunity', label: 'Create Opportunity', icon: IconInfoSquareRoundedFilled },
 ];
 
 export function NavbarSimple() {
   const [active, setActive] = useState('Billing');
 
-  const links = data.map((item) => (
-    <NavLink
-      className={classes.link}
-      label={item.label}
-      component={Link}
-      to={item.link}
-      data-active={item.label === active || undefined}
-      key={item.label}
-      onClick={() => {
-        setActive(item.label);
-      }}
-      leftSection={<item.icon className={classes.linkIcon} stroke={1.5} />}
-    />
-  ));
-
+  const links = data.map((item) =>
+    item.external ? (
+      <a
+        key={item.label}
+        href={item.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes.link}
+      >
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <item.icon className={classes.linkIcon} stroke={1.5} />
+          <span>{item.label}</span>
+        </div>
+      </a>
+    ) : (
+      <NavLink
+        className={classes.link}
+        label={
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <item.icon className={classes.linkIcon} stroke={1.5} />
+            <span>{item.label}</span>
+          </div>
+        }
+        component={Link}
+        to={item.link}
+        data-active={item.label === active || undefined}
+        key={item.label}
+        onClick={() => {
+          setActive(item.label);
+        }}
+      />
+    )
+  );
+  
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
