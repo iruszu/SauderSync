@@ -103,7 +103,13 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
         />
       </Helmet>
       <MantineProvider
-        theme={currentTheme}
+        theme={{
+          ...currentTheme,
+          headings: {
+            ...currentTheme.headings,
+            fontFamily: `${customHeaderTypography || DEFAULT_BODY_FONT}, sans-serif`,
+          },
+        }}
         colorSchemeManager={colorSchemeManager}
         defaultColorScheme={defaultColorScheme}
       >

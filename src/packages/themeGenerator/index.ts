@@ -33,6 +33,10 @@ export const generateMantineTheme = (
   runtimeTheme: RuntimeThemeProps,
 ): MantineThemeOverride => {
   const primaryColor = runtimeTheme.theme_colors.primaryColor;
+  // Set Inter as default fonts
+  const fontFamily = runtimeTheme.fontFamily || DEFAULT_BODY_FONT;
+  const headingsFontFamily = runtimeTheme.headings?.fontFamily || DEFAULT_BODY_FONT; // Use Inter for headings too
+
   const colors = {
     ...resolveColor('primary', primaryColor),
     ...handleSecondaryColor(
@@ -81,8 +85,8 @@ export const generateMantineTheme = (
     fontFamily: `${runtimeTheme.fontFamily ?? DEFAULT_BODY_FONT}, sans-serif`,
     fontFamilyMonospace: `${DEFAULT_MONOSPACE_FONT}, monospace`,
     headings: {
-      fontFamily: `${runtimeTheme.headings?.fontFamily ?? DEFAULT_HEADER_FONT}, sans-serif`,
-      fontWeight: runtimeTheme.headings?.fontWeight ?? '700',
+      fontFamily: `${runtimeTheme.headings?.fontFamily ?? DEFAULT_BODY_FONT}, sans-serif`, // Use Inter as default for headings
+      fontWeight: runtimeTheme.headings?.fontWeight ?? '600', // Use 600 weight for headings
     },
     colors: {
       ...colors,

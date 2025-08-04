@@ -27,16 +27,21 @@
   ],
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
+  "default_mode": "light",
+  "fontFamily": "Inter",
+  "headings": {
+    "fontFamily": "Inter",
+    "fontWeight": 600
+  },
   "theme_colors": {
-    "primaryColor": "#FFFFFF"
+    "primaryColor": {
+      "light": "#FFFFFF",
+      "dark": "#FFFFFF"
+    }
   },
   "replaceGlobalBackground": {
     "light": "#FFFFFF",
     "dark": "#FFFFFF"
   },
-  "defaultBorderRadius": "5",
-  "fontFamily": "Inter",
-  "headings": {
-    "fontFamily": "Inter"
-  }
+  "defaultBorderRadius": "5"
 }

@@ -10,11 +10,9 @@ import {
 } from '@tabler/icons-react';
 import { Code, Group } from '@mantine/core';
 import classes from './NavbarSimple.module.css';
-import logo from './ubcSauder.jpg'; // Adjust the path as needed
+import logo from './logo.png'; // Adjust the path as needed
 import { NavLink } from '@mantine/core';
 import { Link } from 'react-router-dom';
-
-
 
 // <NavLink
 //   label="Home"
@@ -45,7 +43,6 @@ export function NavbarSimple() {
         setActive(item.label);
       }}
       leftSection={<item.icon className={classes.linkIcon} stroke={1.5} />}
-
     />
   ));
 

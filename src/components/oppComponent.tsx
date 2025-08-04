@@ -16,22 +16,35 @@ interface componentProps {
   key: string;
   image: string;
   title: string;
-  date: string;
+  startDate: string;
   description: string;
   status: string;
   eventURL: string;
+  icon: string; //club icon
+  clubName: string; //club name
 }
 
 const MyComponent = ({
   key,
   image,
   title,
-  date,
+  startDate,
   description,
   status,
   eventURL,
+  icon,
+  clubName,
 }: componentProps) => {
   const [liked, setLiked] = useState(false);
+
+  const parsedDate = new Date(startDate);
+
+  const formattedDate = parsedDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   const getBadgeColor = (status: string) => {
     switch (status) {
       case 'active':
@@ -58,18 +71,29 @@ const MyComponent = ({
 
       <Group justify="space-between" mt="md" mb="xs">
         <Text fw={500}>{title}</Text>
-        <Badge color={getBadgeColor(status)}>{status}</Badge>
+        <Group gap="xs" align="center">
+          <img
+            src={icon}
+            alt={`${clubName} icon`}
+            style={{ width: '20px', height: '20px', borderRadius: '50%' }}
+          />
+          <Text size="sm" c="dimmed">
+            {clubName}
+          </Text>
+        </Group>
       </Group>
 
-      <Text c="dimmed" size="sm" mt="xs">
-        Event date: {date}
+      <Text size="sm" c="dimmed">
+        {formattedDate}
       </Text>
-      <ScrollArea h={100} type="scroll" scrollbarSize={8}>
+
+      <ScrollArea h="200px" type="hover" style={{ marginTop: '10px' }}>
         <Text size="sm" c="dimmed">
           {description}
         </Text>
       </ScrollArea>
-      <Group mt="xs">
+
+      <Group mt="md" mb="xs">
         <Button
           radius="lg"
           style={{ flex: 1, backgroundColor: '#62BB45', color: 'white' }}
