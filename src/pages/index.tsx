@@ -3,7 +3,7 @@ import CreateOpportunity from './createOpportunity';
 import Home from './home';
 import Opportunities from './opportunities';
 import { AuthenticationForm } from './login/AuthenticationForm';
-import RoomBookings from './roomBookings';
+import RoomBookings from './bookings/roomBookings';
 import AppLayout from './AppLayout';
 
 export const RootRoutes = () => {

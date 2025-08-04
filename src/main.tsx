@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import { Providers } from './Providers.tsx';
+
 import { RuntimeEnvironmentConfig } from '@runtime/types.ts';
 
 import '@packages/firebase/initializeFirebase.ts';

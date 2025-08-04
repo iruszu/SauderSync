@@ -24,6 +24,11 @@
     "@mantinex/mantine-logo": "^2.0.0",
     "@tabler/icons-react": "^3.34.0",
     "@tanstack/react-query": "^5.75.0",
+<<<<<<< HEAD
+=======
+    "@types/date-fns": "^2.5.3",
+    "@types/uuid": "^10.0.0",
+>>>>>>> d2e9825a44bf19ab3b9296f5fb3195ce92112f6c
     "chroma-js": "^3.1.2",
     "cross-env": "^7.0.3",
     "dagre": "^0.8.5",
@@ -36,6 +41,7 @@
     "react-helmet": "^6.1.0",
     "react-router-dom": "^7.6.3",
     "sass": "^1.89.2",
+    "uuid": "^11.1.0",
     "workbox-build": "^7.3.0",
     "workbox-precaching": "^7.3.0",
     "workbox-routing": "^7.3.0",
