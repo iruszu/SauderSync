@@ -4,7 +4,6 @@ import {
     Text,
     Button,
     Group,
-    ScrollArea,
   } from '@mantine/core';
   import { Link } from 'react-router-dom';
   
@@ -53,16 +52,26 @@ import {
               {eventTime}
             </Text>
         </Group>
-  
+        <Text size="sm" c="dimmed">
+            {description}
+        </Text>
         <Text size="sm" c="dimmed">
           {formattedDate}
         </Text>
   
-        <ScrollArea h="200px" type="hover" style={{ marginTop: '10px' }}>
-          <Text size="sm" c="dimmed">
-            {description}
-          </Text>
-        </ScrollArea>
+    
+        <div>
+            <Text fw={600} >
+                Room Booking Policy
+            </Text>
+                <Text size="sm" c="dimmed">
+                Max 2 hours per booking
+                </Text>
+                <Text size="sm" c="dimmed">
+                Please cancel 2 hours in advance
+            </Text>
+        </div>
+    
   
         <Group mt="md" mb="xs">
           <Button

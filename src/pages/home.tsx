@@ -185,8 +185,8 @@ function Home() {
                   <RoomComponent
                     image={room.image}
                     title={room.id}
-                    date={booking.date}
                     description={booking.description}
+                    date={booking.date}
                     eventTime={formattedTime}
                     roomPath={''}
                   />
