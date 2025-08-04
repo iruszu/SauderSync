@@ -14,11 +14,6 @@ import logo from './logo.png'; // Adjust the path as needed
 import { NavLink } from '@mantine/core';
 import { Link } from 'react-router-dom';
 
-// <NavLink
-//   label="Home"
-//   component={Link}
-//   to="/"
-// />
 
 const data = [
   { link: '/', label: 'Home', icon: IconHomeFilled },
