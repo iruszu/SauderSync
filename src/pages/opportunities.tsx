@@ -12,6 +12,7 @@ import {
 } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import { getFirestoreCollection } from '@packages/firestoreAsQuery/firestoreRequests';
+import classes from './GradientSegmentedControl.module.css'; // Assuming you have a CSS module for styling
 
 type Opportunity = {
   key: string;
@@ -33,16 +34,31 @@ export const Opportunities = (): ReactElement => {
   useEffect(() => {
     const fetchOpportunities = async () => {
       try {
-        const data = await getFirestoreCollection<{
-          key: string;
-          image: string;
-          title: string;
-          date: string;
-          description: string;
-          status: string;
-          eventURL: string;
-        }>('opportunities');
-        setOpportunities(data);
+        // 1. Fetch all clubs (including icon and clubName)
+        const clubs = await getFirestoreCollection<{
+          id: string;
+          icon: string;
+          clubName: string;
+        }>('clubs');
+        let allOpportunities: Opportunity[] = [];
+
+        // 2. For each club, fetch its opportunities subcollection
+        for (const club of clubs) {
+          const clubOpportunities = await getFirestoreCollection<
+            Omit<Opportunity, 'icon' | 'clubName'>
+          >(`clubs/${club.id}/opportunities`);
+
+          // 3. Attach club icon and clubName to each opportunity
+          const opportunitiesWithClub = clubOpportunities.map((opportunity) => ({
+            ...opportunity,
+            icon: club.icon,
+            clubName: club.clubName,
+          }));
+
+          allOpportunities = allOpportunities.concat(opportunitiesWithClub);
+        }
+
+        setOpportunities(allOpportunities);
       } catch (error) {
         console.error('Error fetching opportunities:', error);
       }
