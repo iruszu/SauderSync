@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation, NavLink } from 'react-router-dom';
 import {
   IconHomeFilled,
   IconBriefcase2Filled,
@@ -8,28 +9,26 @@ import {
   IconSettings,
   IconLibraryFilled,
 } from '@tabler/icons-react';
-import { Code, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import classes from './NavbarSimple.module.css';
-import logo from './logo.png'; // Adjust the path as needed
-import { NavLink } from '@mantine/core';
-import { Link } from 'react-router-dom';
-
-// <NavLink
-//   label="Home"
-//   component={Link}
-//   to="/"
-// />
+import logo from './logo.png';
 
 const data = [
   { link: '/', label: 'Home', icon: IconHomeFilled },
   { link: '/opportunities', label: 'Opportunities', icon: IconBriefcase2Filled },
   { link: '/roomBookings', label: 'Room Bookings', icon: IconBookmarksFilled },
-  { link: 'https://library.ubc.ca/', label: 'Library Catalog', icon: IconLibraryFilled, external: true  },
+  { link: 'https://library.ubc.ca/', label: 'Library Catalog', icon: IconLibraryFilled, external: true },
   { link: '/createOpportunity', label: 'Create Opportunity', icon: IconInfoSquareRoundedFilled },
 ];
 
-export function NavbarSimple() {
-  const [active, setActive] = useState('Billing');
+function NavbarSimple() {
+  const location = useLocation();
+  const [active, setActive] = useState(location.pathname);
+
+  useEffect(() => {
+    // Update active state when the route changes
+    setActive(location.pathname);
+  }, [location]);
 
   const links = data.map((item) =>
     item.external ? (
@@ -48,23 +47,19 @@ export function NavbarSimple() {
     ) : (
       <NavLink
         className={classes.link}
-        label={
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <item.icon className={classes.linkIcon} stroke={1.5} />
-            <span>{item.label}</span>
-          </div>
-        }
-        component={Link}
         to={item.link}
-        data-active={item.label === active || undefined}
+        data-active={item.link === active || undefined}
         key={item.label}
-        onClick={() => {
-          setActive(item.label);
-        }}
-      />
+        onClick={() => setActive(item.link)}
+      >
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <item.icon className={classes.linkIcon} stroke={1.5} />
+          <span>{item.label}</span>
+        </div>
+      </NavLink>
     )
   );
-  
+
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
@@ -88,3 +83,5 @@ export function NavbarSimple() {
     </nav>
   );
 }
+
+export default NavbarSimple;

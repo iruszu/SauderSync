@@ -12,6 +12,7 @@ import {
   SegmentedControl,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
+import { v4 as uuidv4 } from 'uuid';
 import {
   IconCalendar,
   IconUsers,
@@ -67,6 +68,8 @@ interface Room {
   image: string;
   availability: number[];
 }
+
+
 
 export default function Rooms() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());

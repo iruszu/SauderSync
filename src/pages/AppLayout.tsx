@@ -1,4 +1,4 @@
-import { NavbarSimple } from '@components/navigationBar';
+import  NavbarSimple  from '@components/navigationBar';
 import { AppShell, Burger } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Outlet } from 'react-router-dom';

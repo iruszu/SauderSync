@@ -4,8 +4,6 @@ import {
   Grid,
   Box,
   Flex,
-  Title,
-  Button,
   Group,
   TextInput,
   SegmentedControl,
