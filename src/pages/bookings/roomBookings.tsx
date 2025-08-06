@@ -76,7 +76,7 @@ interface Room {
 
 
 export default function Rooms() {
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const roomRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const targetRoom = searchParams.get('room');
@@ -310,12 +310,26 @@ useEffect(() => {
     }
   };
 
+//   const handleBuildingChange = (building: string) => {
+//     setSelectedBuilding(building);
+//     setSelectedTimeSlots({ roomIndex: -1, slots: [] });
+//     setBookingDescription('');
+//     setExpandedRoom(null);
+//   };
+
   const handleBuildingChange = (building: string) => {
     setSelectedBuilding(building);
+    // Update the URL without causing a full page reload
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('area', building);
+    setSearchParams(newParams, { replace: true });
+    
+    // Reset other states as needed
     setSelectedTimeSlots({ roomIndex: -1, slots: [] });
     setBookingDescription('');
     setExpandedRoom(null);
   };
+
 
   const handleViewTypeChange = (view: 'Day' | 'Week') => {
     setViewType(view);
@@ -345,7 +359,7 @@ useEffect(() => {
             radius="xl"
             size="md"
             value={selectedArea}
-            onChange={(value) => handleBuildingChange(value)}
+            onChange={handleBuildingChange}
             data={[
               { value: 'Birmingham', label: 'Birmingham' },
               { value: '4th Floor', label: '4th Floor' },
