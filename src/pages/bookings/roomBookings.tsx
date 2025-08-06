@@ -19,7 +19,7 @@ import {
   IconDeviceDesktop,
   IconSquare,
 } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './roomBookings.module.css';
 import '@mantine/dates/styles.css';
 import {
@@ -34,7 +34,11 @@ import { notifications } from '@mantine/notifications';
 import {
   createFirestoreDocument,
   getFirestoreCollection,
+  getFirestoreDocument,
 } from '@packages/firestoreAsQuery/firestoreRequests';
+import { useSearchParams } from 'react-router-dom';
+
+
 const timeSlots = [
   '10am',
   '11am',
@@ -72,9 +76,14 @@ interface Room {
 
 
 export default function Rooms() {
+    const [searchParams] = useSearchParams();
+    const roomRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const targetRoom = searchParams.get('room');
+  const targetArea = searchParams.get('area');
+  const targetDate = searchParams.get('date');
   const [viewType, setViewType] = useState<'Day' | 'Week'>('Day');
-  const [selectedArea, setSelectedBuilding] = useState('Birmingham');
+  const [selectedArea, setSelectedBuilding] = useState(targetArea || 'Birmingham');
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<{
     roomIndex: number;
     slots: number[];
@@ -88,6 +97,39 @@ export default function Rooms() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [expandedRoom, setExpandedRoom] = useState<number | null>(null);
   const [currentRooms, setCurrentRooms] = useState<Room[]>([]);
+  
+// Sync date from URL on initial load
+useEffect(() => {
+    if (targetDate) {
+      const parsedDate = new Date(targetDate);
+      if (!isNaN(parsedDate.getTime())) {
+        setSelectedDate(parsedDate); // Updates the date picker
+      }
+    }
+  }, [targetDate]); // Runs once on mount
+
+  //area   sync from URL    
+  useEffect(() => {
+    const newArea = searchParams.get('area');
+    if (newArea && newArea !== selectedArea) {
+      setSelectedBuilding(newArea);
+    }
+  }, [searchParams, selectedArea]);
+
+  // Scroll to the target room after rooms load
+useEffect(() => {
+    if (targetRoom && currentRooms.length > 0) {
+      const roomIndex = currentRooms.findIndex((r) => r.id === targetRoom);
+      if (roomIndex !== -1) {
+        setTimeout(() => {
+          roomRefs.current[roomIndex]?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+        }, 300); // Small delay to ensure DOM renders
+      }
+    }
+  }, [currentRooms, targetRoom]); // Runs when rooms or URL param changes
 
   // Week view helper functions
   const getWeekStart = (date: Date) => {
@@ -171,6 +213,8 @@ export default function Rooms() {
     const endSlot = Math.max(...selectedTimeSlots.slots);
     return `${timeSlots[startSlot]} - ${timeSlots[endSlot + 1] || timeSlots[endSlot]}`;
   };
+
+  
 
   useEffect(() => {
     const fetchBookingsAndRooms = async () => {
@@ -381,7 +425,16 @@ export default function Rooms() {
         /* Day View - Room List */
         <Stack gap="xl">
           {currentRooms.map((room, index) => (
-            <Card key={index} shadow="sm" padding={0} radius="md" withBorder>
+            <Card 
+            key={room.id} 
+            shadow="sm" 
+            padding={0} 
+            radius="md" 
+            withBorder
+            ref={(el) => (roomRefs.current[index] = el)} 
+            >
+            
+            
               <Box
                 style={{
                   display: 'grid',

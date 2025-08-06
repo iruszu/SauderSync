@@ -183,13 +183,12 @@ function Home() {
               return room ? (
                 <Grid.Col span={4} key={booking.id}>
                   <RoomComponent
-                    image={room.image}
-                    title={room.id}
-                    description={booking.description}
-                    date={booking.date}
-                    eventTime={formattedTime}
-                    roomPath={''}
-                  />
+                          image={room.image}
+                          title={room.id}
+                          description={booking.description}
+                          date={booking.date}
+                          eventTime={formattedTime}
+                          area={room.area}                  />
                 </Grid.Col>
               ) : (
                 <Grid.Col span={4} key={booking.id}>

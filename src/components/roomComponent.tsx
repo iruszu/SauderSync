@@ -11,8 +11,8 @@ import {
     image: string;
     title: string;
     date: string;
+    area: string;
     description: string;
-    roomPath: string;
     eventTime: string; 
   }
   
@@ -20,8 +20,8 @@ import {
     image,
     title,
     date,
+    area,
     description,
-    roomPath,
     eventTime,
   }: componentProps) => {
     
@@ -74,14 +74,17 @@ import {
     
   
         <Group mt="md" mb="xs">
-          <Button
-            radius="lg"
-            style={{ flex: 1, backgroundColor: '#62BB45', color: 'white' }}
-            component={Link}
-            to={`/bookings?roomId=${roomPath}`}
-            >
-            Change
-          </Button>
+        <Button
+        
+        radius="lg"
+        style={{ flex: 1, backgroundColor: '#62BB45', color: 'white' }}
+        component={Link}
+        
+        to={`/roomBookings?date=${date}&area=${area}`}  // Use `room` instead of `roomId`
+        >
+        Change
+        </Button>
+        
         </Group>
       </Card>
     );
