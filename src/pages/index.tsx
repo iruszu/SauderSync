@@ -5,6 +5,7 @@ import Opportunities from './opportunities';
 import { AuthenticationForm } from './login/AuthenticationForm';
 import RoomBookings from './bookings/roomBookings';
 import AppLayout from './AppLayout';
+import Login from "./login"
 
 export const RootRoutes = () => {
   return (
@@ -14,7 +15,9 @@ export const RootRoutes = () => {
               <Route path="/opportunities" element={<Opportunities/>} />
               <Route path="/authentication" element={<AuthenticationForm/>} />
               <Route path="/createOpportunity" element={<CreateOpportunity />} />
+              <Route path="/home" element={<Home/>} />
               <Route path="/roomBookings" element={<RoomBookings/>} />
+              <Route path="/login" element={<Login/>} />
           </Route>
       <Route path="/*" element={<Navigate to="/" />} />
     </Routes>
